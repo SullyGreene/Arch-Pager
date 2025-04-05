@@ -1,20 +1,59 @@
 #!/bin/bash
-# 🎛️ Arch-Pager Command Line App
+# 🎛️ Arch-Pager - Interactive CLI Toolbelt by Sully Greene
 
-# Get the real directory of this script even after symlinking
-SCRIPT_DIR="$(cd "$(dirname "$(realpath "$0")")" && pwd)"
-SCRIPTS_DIR="$SCRIPT_DIR/scripts"
+SCRIPTS_DIR="/usr/local/share/arch-pager/scripts"
 
-COMMAND="$1"
+show_menu() {
+  echo "╔══════════════════════════════════════════════╗"
+  echo "║         🚀  ARCH-PAGER TOOLKIT MENU         ║"
+  echo "╠══════════════════════════════════════════════╣"
+  echo "║ 1️⃣  Update Arch-Pager Scripts               ║"
+  echo "║ 2️⃣  Update Your Arch Linux System           ║"
+  echo "║ 3️⃣  Clean Pacman Cache                      ║"
+  echo "║ 4️⃣  Remove Orphaned Packages                ║"
+  echo "║ 5️⃣  Package Info (Top 20 by Size)           ║"
+  echo "║ 6️⃣  Refresh Mirrorlist (Fastest Servers)    ║"
+  echo "║ 7️⃣  Install or Update AUR Helper (paru)     ║"
+  echo "║ 8️⃣  Manage Services (start/stop/etc)        ║"
+  echo "║ 9️⃣  Disk Usage Analyzer (ncdu)              ║"
+  echo "║ 🔟  System Info Snapshot                     ║"
+  echo "║ 💬  Load Custom Aliases                      ║"
+  echo "║ 0️⃣  Exit                                     ║"
+  echo "╚══════════════════════════════════════════════╝"
+  echo
+}
 
-case $COMMAND in
-  update)
-    bash "$SCRIPTS_DIR/update.sh"
-    ;;
-  update-system)
-    bash "$SCRIPTS_DIR/update_system.sh"
-    ;;
-  *)
-    echo "📖 Usage: pager [update | update-system]"
-    ;;
+run_option() {
+  case "$1" in
+    1) bash "$SCRIPTS_DIR/update.sh" ;;
+    2) bash "$SCRIPTS_DIR/update_system.sh" ;;
+    3) bash "$SCRIPTS_DIR/clean_cache.sh" ;;
+    4) bash "$SCRIPTS_DIR/remove_orphans.sh" ;;
+    5) bash "$SCRIPTS_DIR/pkg_info.sh" ;;
+    6) bash "$SCRIPTS_DIR/mirror_speed.sh" ;;
+    7) bash "$SCRIPTS_DIR/aur_helper.sh" ;;
+    8) bash "$SCRIPTS_DIR/service_manager.sh" ;;
+    9) bash "$SCRIPTS_DIR/disk_usage.sh" ;;
+   10) bash "$SCRIPTS_DIR/sys_info.sh" ;;
+   11) bash "$SCRIPTS_DIR/custom_aliases.sh" ;;
+    0) echo "👋 Exiting Arch-Pager. Have a powerful day!"; exit 0 ;;
+    *) echo "❌ Invalid option. Please enter a number 0–11." ;;
+  esac
+}
+
+# If user passes a direct command (like pager update), route it
+case "$1" in
+  update) bash "$SCRIPTS_DIR/update.sh"; exit ;;
+  update-system) bash "$SCRIPTS_DIR/update_system.sh"; exit ;;
 esac
+
+# Interactive dashboard
+while true; do
+  clear
+  echo "🎩 Welcome to Arch-Pager — Powered by Sully Greene"
+  show_menu
+  read -p "👉 Choose an option [0-11]: " choice
+  run_option "$choice"
+  echo
+  read -p "🔁 Press Enter to return to menu..." _
+done
