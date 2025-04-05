@@ -1,0 +1,16 @@
+#!/bin/bash
+# 🎛️ Arch-Pager Command Line App
+
+COMMAND="$1"
+
+case $COMMAND in
+  update)
+    bash $(dirname "$0")/scripts/update.sh
+    ;;
+  update-system)
+    bash $(dirname "$0")/scripts/update_system.sh
+    ;;
+  *)
+    echo "📖 Usage: pager [update | update-system]"
+    ;;
+esac
