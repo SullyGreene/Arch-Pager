@@ -6,18 +6,23 @@
 
 ## 🧰 What is Arch-Pager?
 
-**Arch-Pager** is a terminal-first, script-based tool that lets you run essential commands through a simple interface. Launch it by typing `pager` and gain access to helpful options like:
+**Arch-Pager** is a terminal-first, script-based toolkit that lets you run essential commands through a simple interface. Launch it by typing `pager` and unlock powerful tools like:
 
 - 🔄 `pager update` – Pull the latest Bash scripts from GitHub.
 - 🧼 `pager update-system` – Fully update your Arch Linux system.
-- 📁 Custom scripts directory to expand your toolkit.
+- 📁 Modular `/scripts` folder with custom tools.
+- 🧙 Add your own aliases and enhancements.
 
 ---
 
 ## 🚀 Quick Install
 
+> **📌 IMPORTANT:** You must clone the repo before running the install script.
+
 ```bash
-curl -s https://raw.githubusercontent.com/SullyGreene/Arch-Pager/main/install.sh | bash
+git clone https://github.com/SullyGreene/Arch-Pager.git
+cd Arch-Pager
+sudo bash install.sh
 ```
 
 Once installed, just run:
@@ -26,15 +31,26 @@ Once installed, just run:
 pager
 ```
 
+This will unlock all available commands and scripts!
+
 ---
 
 ## 🔧 Commands
 
-| Command                 | Description                            |
-|------------------------|----------------------------------------|
-| `pager`                | Launch the interface/help              |
-| `pager update`         | Updates the scripts from GitHub        |
-| `pager update-system`  | Full Arch system update via pacman     |
+| Command                  | Description                                 |
+|--------------------------|---------------------------------------------|
+| `pager`                  | Launch help/interface                       |
+| `pager update`           | Pull latest Bash scripts from GitHub        |
+| `pager update-system`    | Fully update Arch system via pacman         |
+| `pager clean_cache`      | Clear pacman’s package cache 🧽             |
+| `pager remove_orphans`   | Remove unneeded orphaned packages 🗑         |
+| `pager pkg_info`         | Show installed packages sorted by size 📦    |
+| `pager mirror_speed`     | Refresh mirrors for best download speeds ⚡  |
+| `pager aur_helper`       | Install or update AUR helper 🧙              |
+| `pager service_manager`  | Start/stop/enable/disable systemd services 🔧|
+| `pager disk_usage`       | Visualize disk space with `ncdu` 💾         |
+| `pager sys_info`         | Show system summary with neofetch 🖥️        |
+| `pager custom_aliases`   | Load your own aliases 🎩                    |
 
 ---
 
@@ -42,19 +58,26 @@ pager
 
 ```
 Arch-Pager/
-├── install.sh          # Installer script
-├── pager               # The main CLI entry point
-├── scripts/            # All available bash scripts
+├── install.sh              # 📦 Installer script
+├── pager                   # 🎛️ CLI launcher
+├── scripts/                # ⚙️ Modular tools
 │   ├── update.sh
-│   └── update_system.sh
+│   ├── update_system.sh
+│   └── [...more scripts]
+├── docs/                   # 📘 Script documentation
+│   └── clean_cache.md
 ```
 
 ---
 
 ## 🪪 License
 
-This project is licensed under the MIT License – feel free to use, fork, and remix it!
+Licensed under the **MIT License** – fork it, use it, remix it, build your own wizardry! 🧙‍♀️
 
 ---
 
 ## 🧙‍♂️ Made with 💖 by [Sully Greene](https://github.com/SullyGreene)
+
+---
+
+💡 **Pro Tip:** Add your favorite tools to `scripts/` and document them in `docs/` — build your own magical CLI suite!
