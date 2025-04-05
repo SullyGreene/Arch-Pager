@@ -1,14 +1,18 @@
 #!/bin/bash
 # 🎛️ Arch-Pager Command Line App
 
+# Get the real directory of this script even after symlinking
+SCRIPT_DIR="$(cd "$(dirname "$(realpath "$0")")" && pwd)"
+SCRIPTS_DIR="$SCRIPT_DIR/scripts"
+
 COMMAND="$1"
 
 case $COMMAND in
   update)
-    bash $(dirname "$0")/scripts/update.sh
+    bash "$SCRIPTS_DIR/update.sh"
     ;;
   update-system)
-    bash $(dirname "$0")/scripts/update_system.sh
+    bash "$SCRIPTS_DIR/update_system.sh"
     ;;
   *)
     echo "📖 Usage: pager [update | update-system]"
