@@ -1,46 +1,59 @@
 #!/bin/bash
-# 📦 Advanced Install Script for Arch-Pager CLI
+# 📦 Bulletproof Arch-Pager Installer by Sully Greene
 
-set -e  # Exit immediately if a command exits with a non-zero status
+set -e
 
-INSTALL_DIR="/usr/local/bin"
-PAGER_NAME="pager"
-SCRIPT_NAME="$(basename "$0")"
+INSTALL_BIN="/usr/local/bin"
+INSTALL_DIR="/usr/local/share/arch-pager"
+PAGER_FILE="pager"
+SCRIPTS_DIR="scripts"
 
 echo "🚀 Starting Arch-Pager Installation..."
 
-# Check for root privileges
+# 🔐 Elevate if not root
 if [ "$EUID" -ne 0 ]; then
-  echo "❌ Please run this installer as root (e.g., using sudo)."
+  echo "⚠️  Please run this installer as root (restarting with sudo...)"
+  exec sudo bash "$0" "$@"
+fi
+
+# 🔍 Validate files
+if [ ! -f "$PAGER_FILE" ]; then
+  echo "❌ Missing '$PAGER_FILE' in current directory."
   exit 1
 fi
 
-# Ensure pager script exists
-if [ ! -f "$PAGER_NAME" ]; then
-  echo "❌ Cannot find '$PAGER_NAME' script in current directory. Make sure you're in the project root."
+if [ ! -d "$SCRIPTS_DIR" ]; then
+  echo "❌ Missing '$SCRIPTS_DIR/' directory with tools."
   exit 1
 fi
 
-# Make sure scripts directory exists
-if [ ! -d "scripts" ]; then
-  echo "❌ Missing 'scripts/' directory. Installation aborted."
-  exit 1
-fi
+# 🧼 Clean previous installs
+echo "🧹 Cleaning old installs (if any)..."
+rm -f "$INSTALL_BIN/pager"
+rm -rf "$INSTALL_DIR"
 
-# Copy pager to /usr/local/bin
-echo "📂 Copying '$PAGER_NAME' to $INSTALL_DIR ..."
-cp "$PAGER_NAME" "$INSTALL_DIR/$PAGER_NAME"
-chmod +x "$INSTALL_DIR/$PAGER_NAME"
+# 🛠 Create install directories
+echo "📁 Setting up in: $INSTALL_DIR"
+mkdir -p "$INSTALL_DIR"
 
-# Make scripts executable
-echo "🔧 Making scripts executable..."
-chmod +x scripts/*.sh
+# 🚚 Copy scripts
+echo "📂 Copying $SCRIPTS_DIR to $INSTALL_DIR..."
+cp -r "$SCRIPTS_DIR" "$INSTALL_DIR/"
 
-echo "✅ Arch-Pager CLI installed!"
-echo "💡 You can now run 'pager' from anywhere in your terminal."
+# 🔧 Make all scripts executable
+chmod +x "$INSTALL_DIR/scripts/"*.sh
 
-# Optional post-install test
-read -p "👉 Would you like to test it now? (y/N): " confirm
+# 🚀 Install launcher
+echo "🔗 Linking CLI: $PAGER_FILE -> $INSTALL_BIN/pager"
+cp "$PAGER_FILE" "$INSTALL_BIN/pager"
+chmod +x "$INSTALL_BIN/pager"
+
+# ✅ Done
+echo "✅ Arch-Pager CLI installed successfully!"
+echo "🧙 Type 'pager' in your terminal to begin your command-line wizardry!"
+
+# 🧪 Optional test
+read -p "👉 Would you like to run 'pager' now? (y/N): " confirm
 if [[ "$confirm" =~ ^[Yy]$ ]]; then
-  "$INSTALL_DIR/$PAGER_NAME"
+  pager
 fi
