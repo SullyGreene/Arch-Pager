@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# Wine Installer Script for Arch Linux
+# Wine Installer Script for Arch Linux with 32-bit or 64-bit prefix option
 # Last updated: 2025-04-07
 
 echo "==> Updating system..."
@@ -8,14 +8,15 @@ sudo pacman -Syu --noconfirm
 
 echo "==> Enabling multilib (if not already enabled)..."
 if ! grep -q "\[multilib\]" /etc/pacman.conf; then
+    echo "==> Enabling multilib repo in /etc/pacman.conf..."
     sudo sed -i '/#\[multilib\]/,/#Include = \/etc\/pacman.d\/mirrorlist/ s/#//' /etc/pacman.conf
     sudo pacman -Syy
 fi
 
-echo "==> Installing Wine (staging version)..."
+echo "==> Installing Wine Staging + Tools..."
 sudo pacman -S --noconfirm wine-staging wine-mono wine-gecko winetricks
 
-echo "==> Installing audio support packages..."
+echo "==> Installing audio dependencies..."
 sudo pacman -S --noconfirm \
     lib32-alsa-lib \
     lib32-alsa-plugins \
@@ -24,11 +25,10 @@ sudo pacman -S --noconfirm \
     pipewire-pulse \
     lib32-libcups
 
-echo "==> Installing graphics driver libraries (multilib)..."
-# You can customize this based on your GPU
+echo "==> Installing 32-bit graphics libraries..."
 sudo pacman -S --noconfirm lib32-mesa lib32-vulkan-icd-loader
 
-echo "==> Installing optional packages for gaming/media..."
+echo "==> Installing optional gaming/media libs..."
 sudo pacman -S --noconfirm \
     lib32-gnutls \
     lib32-sdl2 \
@@ -36,13 +36,22 @@ sudo pacman -S --noconfirm \
     lib32-gst-plugins-good \
     lib32-gst-libav
 
-echo "==> Optional: Install DXVK and VKD3D-Proton (for Vulkan-based DirectX)..."
-yay -S --noconfirm dxvk-bin vkd3d-proton-bin
+read -p "Do you want a 32-bit or 64-bit Wine prefix? [32/64]: " WINEBITS
+if [[ "$WINEBITS" == "32" ]]; then
+    export WINEARCH=win32
+    export WINEPREFIX="$HOME/.wine32"
+    echo "==> Setting up 32-bit Wine prefix at $WINEPREFIX..."
+else
+    export WINEARCH=win64
+    export WINEPREFIX="$HOME/.wine64"
+    echo "==> Setting up 64-bit Wine prefix at $WINEPREFIX..."
+fi
 
-echo "==> Done. You can now configure Wine using:"
-echo "    winecfg"
-echo "    winetricks"
+wineboot -u
+winecfg
 
-echo "==> Example to create a new 32-bit prefix:"
-echo "    WINEARCH=win32 WINEPREFIX=~/.wine32 winecfg"
+echo "==> Wine prefix created: $WINEPREFIX"
+echo "==> You can now install apps with:"
+echo "    WINEPREFIX=$WINEPREFIX wine setup.exe"
+echo "    WINEPREFIX=$WINEPREFIX winetricks"
 
